@@ -13,7 +13,7 @@ def create_points(walls:list) -> list:
     return points
 
 
-def calc_area(points:list) -> list:
+def calc_area(points:list , multiplier: float = 1.0) -> float:
     """
     Calculate the area of given points.
     """
@@ -26,10 +26,10 @@ def calc_area(points:list) -> list:
         else:
             sum1 = sum1 + points[i][0] * points[i + 1][1]
             sum2 = sum2 + points[i][1] * points[i + 1][0]
-    return abs(sum1 - sum2) / 2
+    return (abs(sum1 - sum2) / 2) * multiplier
     
 
-def validate_input(choice: int):
+def validate_input(choice: int, msg: str):
     """
     Return the validated input of choice.
     """
@@ -37,13 +37,9 @@ def validate_input(choice: int):
     while not is_valid_input:
         try:
             if choice == 1:
-                valid_input = int(input("Anzahl Räume: "))
+                valid_input = int(input(msg))
             if choice == 2:
-                valid_input = int(input("Anzahl Wände: "))
-            if choice == 3:
-                valid_input = float(input("Wandbreite: "))
-            if choice == 4:
-                valid_input = float(input("Winkel: "))
+                valid_input = float(input(msg))
         except ValueError:
             print("Ungültige Eingabe")
         else:
@@ -53,17 +49,17 @@ def validate_input(choice: int):
 
 def flat_size() -> float:
     area = 0
-    number_of_rooms = validate_input(1)
+    number_of_rooms = validate_input(1, "Anzahl Räume: ")
     for _ in range(number_of_rooms):
-        number_of_walls = validate_input(2)
         walls = []
+        number_of_walls = validate_input(1, "Anzahl Wände: ")
         is_right_angled = True if input("Nur rechtwinkelig? j / n : ").lower().strip() == "j" else False
         for i in range(number_of_walls):
-            wall_width = validate_input(3)
+            wall_width = validate_input(2, "Wandbreite: ")
             if is_right_angled:
                 angle = 90
             else:
-                angle = validate_input(4)
+                angle = validate_input(2, "Winkel: ")
             walls.append((i, wall_width, angle))
         points = create_points(walls)
         area += calc_area(points)   
